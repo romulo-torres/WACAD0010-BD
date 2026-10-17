@@ -1,0 +1,69 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "mysql"
+}
+
+model Consumidor {
+  cpf        Int                @id
+  nome       String             @db.VarChar(50)
+  nascimento DateTime           @db.Date
+  telefone   String             @db.VarChar(14)
+  email      String             @unique @db.VarChar(45)
+  consumido  Produto_Comprado[]
+  enderecos  Enderecos[]
+}
+
+model Produto_Comprado {
+  idproduto_comprado Int        @id
+  consumidor_cpf     Int
+  consumidor         Consumidor @relation(fields: [consumidor_cpf], references: [cpf])
+  codigo_produto     Int
+  produto            Produto    @relation(fields: [codigo_produto], references: [codigo])
+
+  endereco_escolhido Int?
+  endereco           Enderecos? @relation(fields: [endereco_escolhido, consumidor_cpf], references: [id_endereco, consumidor_cpf], onDelete: NoAction, onUpdate: NoAction)
+
+  data            DateTime @default(now())
+  forma_pagamento String   @db.VarChar(15)
+  preco_total     Decimal  @db.Decimal(10, 2)
+  desconto        Decimal  @db.Decimal(10, 2)
+}
+
+
+model Enderecos {
+  id_endereco       Int                @id @default(autoincrement())
+  consumidor_cpf    Int
+  endereco          String             @db.VarChar(60)
+  consumidor        Consumidor         @relation(fields: [consumidor_cpf], references: [cpf])
+  produto_comprados Produto_Comprado[]
+
+  @@unique([id_endereco, consumidor_cpf])
+  @@index([consumidor_cpf])
+}
+
+model Produto {
+  codigo       Int                @id
+  categoria    String             @db.VarChar(30)
+  subcategoria String             @db.VarChar(40)
+  modelo       String             @db.VarChar(45)
+  fabricante   String             @db.VarChar(30)
+  qtd          Int
+  preco        Decimal            @db.Decimal(10, 2)
+  numeroSerie  Numero_Serie?
+  comprado     Produto_Comprado[]
+}
+
+model Numero_Serie {
+  codigo_produto  Int     @id
+  numero_de_serie String  @unique
+  produto         Produto @relation(fields: [codigo_produto], references: [codigo])
+}
