@@ -10,14 +10,23 @@
     "type": "git",
     "url": "git+https://github.com/romulo-torres/WACAD0010-BD.git"
   },
-  "type": "commonjs",
-  "main": "index.js",
+  "type": "module",
+  "main": "index.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx src/crud.ts",
+    "build": "prisma generate && tsc",
+    "start": "node build/crud.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:reset": "prisma migrate reset",
+    "db:studio": "prisma studio",
+    "db:setup": "prisma generate && prisma migrate dev"
   },
   "devDependencies": {
     "@types/node": "^26.6.5",
     "prisma": "^7.10.1",
+    "tsx": "^4.23.15",
     "typescript": "^7.0.2"
   },
   "dependencies": {

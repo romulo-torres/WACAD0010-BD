@@ -5,7 +5,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -37,7 +37,6 @@ model Produto_Comprado {
   preco_total     Decimal  @db.Decimal(10, 2)
   desconto        Decimal  @db.Decimal(10, 2)
 }
-
 
 model Enderecos {
   id_endereco       Int                @id @default(autoincrement())
